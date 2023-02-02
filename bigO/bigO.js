@@ -140,3 +140,28 @@ const double = (arr) => {
  * Object.entries - O(N)
  * hasOwnProperty - O(1)
  */
+
+// Big O of Arrays
+/**
+ * Insertion - it depends
+ *  - Insertion at the END of an array is O(1) because it just adds on the item at the end and gives it the next index number (push)
+ *  - Insertion at the BEGINNING of an array is O(N) because it has to reindex every element of the array (shift)
+ * Removal - it depends
+ *  - Removal at the END of an array is O(1) because it just adds on the item at the end and gives it the next index number (pop)
+ *  - Removal at the BEGINNING of an array is O(N) because it has to reindex every element of the array (unshift)
+ * Seaching - O(N)
+ * Access - O(1)
+ */
+
+// Big O of Array Operations
+/**
+ * push - O(1) - adding data to the end of an array
+ * pop - O(1) - removing data from the end of an array
+ * shift - O(N) - Inserting data to the begining of an array
+ * unshift - O(N) - Removing data from the begining of an array
+ * concat - O(N) - Merges multiple arrays, returning a new array without changing the existing arrays
+ * slice - O(N) - returns a copy of a portion of an array into a new array selected from beginning of the array to the end without including the end. The original array is not modified.
+ * splice - O(N) - changes the content of an array by removing existing elements and/or adding new elements
+ * sort - O(N * log N) - the time it takes to sort an array is larger than just o of n. We have to make comparisons. We have to move things around.
+ * forEach/map/filter/reduce/etc. - O(N) - looping over each element so as the size of the array grows so does the time it takes to iterate over it
+ */
