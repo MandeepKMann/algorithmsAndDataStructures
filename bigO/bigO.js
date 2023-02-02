@@ -125,3 +125,18 @@ const double = (arr) => {
 // The above example, the newArr and I takes up 1 constant space each, but THEN the creation of the new array is dependent on the size of the size of the arr variables THEREFORE O(n) space!
 
 
+// Big O of Objects
+/**
+ * Insertion - O(1)
+ * Removal - O(1)
+ * Searching - O(N)
+ * Access - O(1)
+ */
+
+// Big O of Object Methods
+/**
+ * Object.keys - O(N)
+ * Object.values - O(N)
+ * Object.entries - O(N)
+ * hasOwnProperty - O(1)
+ */
