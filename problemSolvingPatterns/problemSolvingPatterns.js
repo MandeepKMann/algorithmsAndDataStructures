@@ -64,3 +64,156 @@
  * 7) How have other people solved this problem?
  */
 
+////////////////////HOW TO MASTER COMMON PROBLEM SOLVING PATTERNS ////////////////////
+
+/**
+ * COMMON PROBLEM SOLVING PATTERNS
+ * - Frequency Counter
+ * - Multiple Pointers
+ * - Sliding Window
+ * - Divide and Conquer
+ * - Dynamic Programming
+ * - Greedy Algorithms
+ * - Backtracking
+ */
+
+
+/**
+ * Frequency Counters
+ * - This pattern uses objects or sets to collect values/frequencies of values
+ * - This can often avoid the need for nested loops or 0(N^2) operations with arrays/strings
+ * - Often used when you're comparing two pieces of data
+ */
+
+// Frequency Counter Pattern
+// Write a function called same, which accepts two arrays. The function should return true is every value in the array has it's corresponding value squared in the second array. The frequency of the values must be the same.
+
+// O(N^2)
+const same = (arr1, arr2) => {
+    // check if both arrays are same length, if not it returns FALSE
+    if(arr1.length !== arr2.length) {
+        return false;
+    }
+    // iterates through the both arrays. Tries to match a number in the first array to one in the second array but ** 2 (the square of each value). If indexOf cannot find the index it will return -1, meaning it doesn't exist in the second array which makes it return FALSE
+    for(let i = 0; i < arr1.length; i++) {
+        let correctIndex = arr2.indexOf(arr1[i] ** 2)
+        if(correctIndex === -1) {
+            return false;
+        }
+        // removes the number being compared from the array and moves on to the next one
+        arr2.splice(correctIndex, 1)
+    }
+    return true
+}
+
+console.log("same", same([1, 2, 3], [4, 1, 9])) //true
+console.log("same", same([1, 2, 3], [1, 9])) //false
+console.log("same", same([1, 2, 1], [4, 4, 1])) //false (must be same frequency)
+
+// O(N)
+const sameRefactored = (arr1, arr2) => {
+    // check if both arrays are same length, if not it returns FALSE
+    if(arr1.length !== arr2.length) {
+        return false;
+    }
+    // each object will count the frequency of individual values in the arrays as a key:pair value
+    let frequencyCounter1 = {}
+    let frequencyCounter2 = {}
+    // loop over values in the array
+    // val is a placeholder, for each val in an array, we're going to add 1 to the requency counter if it's already in there, or initialize it to 1
+    for(let val of arr1) {
+        frequencyCounter1[val] = (frequencyCounter1[val] || 0) + 1
+    }
+    for(let val of arr2) {
+        frequencyCounter2[val] = (frequencyCounter2[val] || 0) + 1
+    }
+    for(let key in frequencyCounter1) {
+        // Checks if the squared of the value in the first array exists in the second array
+        if(!(key ** 2 in frequencyCounter2)) {
+            return false
+        }
+        // checks if the values correspond (two 2s and two 4s)
+        if(frequencyCounter2[key ** 2] !== frequencyCounter1[key]) {
+            return false
+        }
+    }
+    return true
+}
+console.log("sameRefactored", sameRefactored([1, 2, 3, 2, 5], [9, 1, 4, 4, 25])) // True
+console.log("sameRefactored", sameRefactored([1, 2, 3, 2, 5], [9, 1, 4, 4, 11])) //False
+console.log("sameRefactored", sameRefactored([1, 2, 3], [4, 1, 9])) //true
+console.log("sameRefactored", sameRefactored([1, 2, 3], [1, 9])) //false
+console.log("sameRefactored", sameRefactored([1, 2, 1], [4, 4, 1])) //false (must be same frequency)
+
+//Frequency Counter Anagram
+
+/**
+ * Given two strings, write a function to determine if the second string is an anagram of the first
+ */
+
+const validAnagram = (str1, str2) => {
+    if(str1.length !== str2.length) {
+        return false;
+    }
+    let frequencyCounter1 = {}
+    let frequencyCounter2 = {}
+    for (let val of str1) {
+        frequencyCounter1[val] = (frequencyCounter1[val] || 0) + 1
+    }
+    for (let val of str2) {
+        frequencyCounter2[val] = (frequencyCounter2[val] || 0) + 1
+    }    
+    for (let key in frequencyCounter1) {
+        // checks for same letters
+        if(!(key in frequencyCounter2)) {
+            return false;
+        }
+        // checks for the frequency of that letter
+        if(frequencyCounter2[key] !== frequencyCounter1[key]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+console.log("validAnagram", validAnagram(' ', ' ')) //true
+console.log("validAnagram", validAnagram('aaz', 'zza')) //false
+console.log("validAnagram", validAnagram('cinema', 'iceman')) //true
+console.log("validAnagram", validAnagram('rat', 'car')) //false
+console.log("validAnagram", validAnagram('awesome', 'awesom')) //false
+console.log("validAnagram", validAnagram('qwerty', 'qeywrt')) //true
+console.log("validAnagram", validAnagram('texttwisttime', 'timetwisttext')) //true
+
+
+const validAnagramRefactored = (str1, str2) => {
+    if (str1.length !== str2.length) {
+        return false;
+    }
+
+    const lookup = {}
+
+    for (let i = 0; i < str1.length; i++) {
+        let letter = str1[i];
+        // if letter exists, increment, otherwise set to 1
+        lookup[letter] ? lookup[letter] += 1 : lookup[letter] = 1;
+    }
+
+    for(let i = 0; i < str2.length; i++) {
+        let letter = str2[i];
+        // can't find letter or letter is zero then it's not an anagram
+        if (!lookup[letter]) {
+            return false;
+        } else {
+            lookup[letter] -= 1;
+        }
+    }
+    return true;
+}
+
+console.log("validAnagramRefactored", validAnagramRefactored(' ', ' ')) //true
+console.log("validAnagramRefactored", validAnagramRefactored('aaz', 'zza')) //false
+console.log("validAnagramRefactored", validAnagramRefactored('cinema', 'iceman')) //true
+console.log("validAnagramRefactored", validAnagramRefactored('rat', 'car')) //false
+console.log("validAnagramRefactored", validAnagramRefactored('awesome', 'awesom')) //false
+console.log("validAnagramRefactored", validAnagramRefactored('qwerty', 'qeywrt')) //true
+console.log("validAnagramRefactored", validAnagramRefactored('texttwisttime', 'timetwisttext')) //true
