@@ -198,7 +198,7 @@ const validAnagramRefactored = (str1, str2) => {
         lookup[letter] ? lookup[letter] += 1 : lookup[letter] = 1;
     }
 
-    for(let i = 0; i < str2.length; i++) {
+    for (let i = 0; i < str2.length; i++) {
         let letter = str2[i];
         // can't find letter or letter is zero then it's not an anagram
         if (!lookup[letter]) {
@@ -217,3 +217,155 @@ console.log("validAnagramRefactored", validAnagramRefactored('rat', 'car')) //fa
 console.log("validAnagramRefactored", validAnagramRefactored('awesome', 'awesom')) //false
 console.log("validAnagramRefactored", validAnagramRefactored('qwerty', 'qeywrt')) //true
 console.log("validAnagramRefactored", validAnagramRefactored('texttwisttime', 'timetwisttext')) //true
+
+/**
+ * Multiple Pointers
+ * - Creating POINTERS to values that correspond to an index or position and move towards the beginning, end or middle based on a certain condition
+ * - VERY efficient for solving problems with minimal space complexity as well
+ */
+
+//Write a function called sumZero which accepts a SORTED array of intergers. This function should find the FIRST pair where the sum is 0. Return an array that includes both values that sum to zero or undefined if a pair does not exist.
+
+// did this on my own
+const sumZero = (arr) => {
+    if (arr.length <= 1) {
+        return false;
+    }
+    let newArr = []
+    for (let i = 0; i < arr.length; i++) {
+        for (let j = arr.length - 1; j <= arr.length; j--) {
+
+            if (arr[i] + arr[j] === 0) {
+                newArr.push(arr[i], arr[j])
+                return newArr
+            } else {
+                return undefined;
+            }
+        }
+    }
+}
+
+console.log("sumZero", sumZero([-3, -2, -1, 0, 1, 2, 3])) //[-3, 3]
+console.log("sumZero", sumZero([-2, 0, 1, 3])) // undefined
+console.log("sumZero", sumZero([1, 2, 3])) //undefined
+
+//naive solution
+// time cplexity of O(N^2) and space complexity of O(1)
+const sumZeroNaive = (arr) => {
+    for (let i = 0; i < arr.length; i++) {
+        for (let j = i + 1; j < arr.length; j++) {
+            if (arr[i] + arr[j] === 0) {
+                return [arr[i], arr[j]]
+            }
+        }
+    }
+}
+
+console.log("sumZeroNaive", sumZeroNaive([-3, -2, -1, 0, 1, 2, 3])) //[-3, 3]
+console.log("sumZeroNaive", sumZeroNaive([-2, 0, 1, 3])) // undefined
+console.log("sumZeroNaive", sumZeroNaive([1, 2, 3])) //undefined
+
+// time complexity O(N) and space complecity O(1)
+const sumZeroRefactored = (arr) => {
+    let left = 0;
+    let right = arr.length - 1;
+    while (left < right) {
+        let sum = arr[left] + arr[right];
+        if (sum === 0) {
+            return [arr[left], arr[right]];
+        } else if (sum > 0) {
+            right--;
+        } else {
+            left++;
+        }
+    }
+}
+
+console.log("sumZeroRefactored", sumZeroRefactored([-4, -3, -2, -1, 0, 1, 2, 3, 10])) //[-3, 3]
+
+
+// Multiple Pointers: Count Unique Values
+// Implement a function called countUniqueValues, which accepts a sorted array, and counts the unique values in the array. There can be negative numbers in the array, but it will always be sorted.
+
+const countUniqueValues = (arr) => {
+    if (arr.length === 0) {
+        return 0
+    }
+    // first pointer starting at index of 0
+    let i = 0;
+    // second pointer starting at index of 1
+    for(let j = 1; j < arr.length; j++) {
+        
+        if(arr[i] !== arr[j]) {
+            i++;
+            arr[i] = arr[j]
+        }
+    }
+    return i + 1
+}
+
+console.log("countUniqueValues", countUniqueValues([1, 1, 1, 1, 1, 2])) //2
+console.log("countUniqueValues", countUniqueValues([1, 2, 3, 4, 4, 4, 7, 7, 12, 12, 13])) //7
+console.log("countUniqueValues", countUniqueValues([])) //0
+console.log("countUniqueValues", countUniqueValues([-2, -1, -1, 0, 1])) //4
+
+/**
+ * SLIDING WINDOW
+ * - This pattern involved creating a window which can either be an array or number from one position to another
+ * - depending on a certain condition, the window either increase or closes (and a new window is created)
+ * - very usefut for keeping track of a subset of data in an array/string
+ */
+
+// Write a function called maxSubarrarySum which accepts an array or integers, and a number called n. The function should calculate the maximum sum of in consecutive elements in the array.
+
+// O(N^2)
+const naiveMaxSubarraySum = (array, n) => {
+    if (n > array.length) {
+        return null;
+    }
+    // account for arrays with only negative numbers
+    let max = -Infinity;
+    // less than array length because we always want to sum only n amount of data in the array, no less
+    for (let i = 0; i < array.length - n + 1; i++) {
+        // stored our sum each time through and compares it to max
+        let temp = 0
+        for (let j = 0; j < n; j++) {
+            // sums up numbers from i to j
+            temp += array[i + j];
+        }
+        //if the temp number is bigger than our max, our temp replaces the max and the loop continues
+        if (temp > max) {
+            max = temp;
+        }
+    }
+    return max;
+}
+
+console.log('naiveMaxSubarraySum', naiveMaxSubarraySum([1, 2, 5, 2, 8, 1, 5], 2)) //10
+console.log('naiveMaxSubarraySum', naiveMaxSubarraySum([1,2,5,2,8,1,5],4)) // 17
+console.log('naiveMaxSubarraySum', naiveMaxSubarraySum ([4,2,1,6],1)) // 6 
+console.log('naiveMaxSubarraySum', naiveMaxSubarraySum ([4,2,1,6,2],4)) // 13 
+console.log('naiveMaxSubarraySum', naiveMaxSubarraySum([],4)) // null
+
+// Sliding Window Approach O(N)
+const maxSubarraySum = (array, n) => {
+    let maxSum = 0;
+    let tempSum = 0;
+    // adds together n amount of data in the array starting from 0
+    if (array.length < n) return null;
+    for (let i = 0; i < n; i++) {
+        maxSum += array[i];
+    }
+    tempSum = maxSum;
+    for (let i = n; i < array.length; i++) {
+        tempSum = tempSum - array[i - n] + array[i];
+        maxSum = Math.max(maxSum, tempSum);
+    }
+    return maxSum
+}
+
+console.log('maxSubarraySum', maxSubarraySum([1, 2, 5, 2, 8, 1, 5], 2)) //10
+console.log('maxSubarraySum', maxSubarraySum([1,2,5,2,8,1,5], 4)) // 17
+console.log('maxSubarraySum', maxSubarraySum ([4,2,1,6], 1)) // 6 
+console.log('maxSubarraySum', maxSubarraySum ([4,2,1,6,2], 4)) // 13 
+console.log('maxSubarraySum', maxSubarraySum([], 4)) // null
